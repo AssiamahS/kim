@@ -102,6 +102,35 @@ The top-10 ROI wallets on HL's leaderboard are <strong>not trading crypto</stron
 </ol>
 </div>
 
+<h2>LIVE STATUS (auto-updated manually)</h2>
+<div class="verdict">
+<strong>Deployed 2026-04-17 ~05:55 EST:</strong>
+<ul>
+  <li>✅ <strong>$30 in HLP vault</strong> — passive 10-30% APY, zero work</li>
+  <li>✅ <strong>5 funding-harvest bots</strong> running on xyz:SILVER ($20), xyz:MU ($20), xyz:NVDA ($15), xyz:AAPL ($15), xyz:TSLA ($15) — total $85 deployed across the markets where backtest showed positive train PnL</li>
+  <li>✅ Auto-restart loops on each bot (recover from crashes)</li>
+  <li>✅ Risk manager: 3% daily loss kill switch, 50% max position size</li>
+  <li>✅ Telegram alerts on every fill / error / risk-kill</li>
+  <li>✅ Each bot polls funding every 10 min, opens position only when funding hits top/bottom 7-day decile</li>
+</ul>
+<strong>Bots will sit in HOLD until funding spikes.</strong> Currently SILVER/MU at +5.5% APY (below entry threshold). Could fire in hours or days depending on market.
+</div>
+
+<h2>The Season 2 HYPE airdrop multiplier (game-changer)</h2>
+<div class="callout">
+Hyperliquid Season 2 airdrop is LIVE. <strong>388M HYPE tokens (38.888% of supply) earmarked for community rewards.</strong> Snapshot date not announced. Season 1 made <strong>1,589 wallets crossed $1M</strong>, top decile got $50K-$500K+ allocations.<br><br>
+<strong>What earns points:</strong>
+<ul>
+  <li>Trading volume on HyperCore — every $ counts</li>
+  <li><strong>1.5x multiplier</strong> on new pairs (first 30 days) — chase listings</li>
+  <li>HIP-3 markets have 90% taker fee reduction (0.045% → 0.0045%) = volume cheap to generate</li>
+  <li>Delta-neutral farming: long spot + short perp = volume w/ no price exposure</li>
+  <li>Stake any earned HYPE: 1 HYPE = 8 points/day + 18% APR</li>
+  <li>Hold HYPE/PURR/HFUN/CATBAL → ecosystem project airdrops</li>
+</ul>
+<strong>Key insight:</strong> direct trading PnL on $92 = ~$2-10/month. <strong>HYPE airdrop value at 6 months = potentially $50-500+</strong> if Season 2 mirrors Season 1 distribution. The bot's REAL value isn't direct PnL — it's accumulating points for the airdrop.
+</div>
+
 <h2>What we still need (build queue)</h2>
 <ul>
   <li><code>fetch_hip3_candles.py</code> — pull oil/silver/stock perp data via <code>candleSnapshot</code> with <code>dex</code> param</li>
