@@ -1,0 +1,43 @@
+<!doctype html><html><head><meta charset="utf-8">
+<title>kim · live dashboard</title>
+<meta http-equiv="refresh" content="60">
+<style>
+  body { background:#0e1117; color:#e6e6e6; font:14px/1.55 -apple-system,system-ui,sans-serif; margin:0; padding:32px; max-width:1100px; }
+  h1 { font-size:22px; margin:0 0 4px; }
+  h2 { font-size:15px; color:#9fb0c0; font-weight:500; margin:24px 0 8px; }
+  .sub { color:#7d8a96; }
+  .big { font-size:36px; font-weight:600; margin:8px 0; }
+  table { border-collapse:collapse; width:100%; font-size:13px; }
+  th, td { padding:8px 10px; border-bottom:1px solid #222; text-align:right; font-variant-numeric:tabular-nums; }
+  th:first-child, td:first-child, th:nth-child(2), td:nth-child(2), th:last-child, td:last-child { text-align:left; }
+  th { background:#161b22; color:#9fb0c0; font-weight:500; }
+  .pos { color:#16c784; } .neg { color:#ea3943; }
+  .grid { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin:16px 0; }
+  .card { background:#161b22; padding:12px 16px; border-radius:6px; }
+  .card .lbl { color:#7d8a96; font-size:12px; }
+  .card .val { font-size:18px; font-weight:600; font-variant-numeric:tabular-nums; }
+</style></head><body>
+<h1>kim · live dashboard</h1>
+<div class="sub">auto-refresh 60s · updated 2026-04-17T10:12:33+00:00</div>
+
+<h2>Account</h2>
+<div class="big pos">$92.25</div>
+<div class="grid">
+  <div class="card"><div class="lbl">Spot USDC</div><div class="val">$62.25</div></div>
+  <div class="card"><div class="lbl">Perp equity</div><div class="val">$0.00</div></div>
+  <div class="card"><div class="lbl">HLP vault</div><div class="val">$30.00</div></div>
+  <div class="card"><div class="lbl">Other vaults</div><div class="val">$0.00</div></div>
+</div>
+
+<h2>Open positions</h2>
+<table>
+<thead><tr><th>Coin</th><th>Side / Size</th><th>Entry</th><th>Unrealized PnL</th></tr></thead>
+<tbody><tr><td colspan="4" class="sub">no open positions</td></tr></tbody></table>
+
+<h2>Running bots (0)</h2>
+<table>
+<thead><tr><th>Market</th><th>Size</th><th>Funding APY</th><th>Decision</th><th>Last update (UTC)</th></tr></thead>
+<tbody><tr><td colspan="5" class="sub">no bots running</td></tr></tbody></table>
+
+<p class="sub">Reports: <a style="color:#5a9fd4" href="https://assiamahs.github.io/offprem/">offprem</a> · <a style="color:#5a9fd4" href="https://assiamahs.github.io/kim/">kim research</a></p>
+</body></html>
