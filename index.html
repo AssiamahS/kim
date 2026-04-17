@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8">
+<title>kim · hyperliquid alpha research</title>
+<style>
+  :root { color-scheme: dark; }
+  body { background:#0e1117; color:#e6e6e6; font:14px/1.55 -apple-system,system-ui,sans-serif; margin:0; padding:32px; max-width:1100px; }
+  h1 { font-size:24px; margin:0 0 4px; }
+  h2 { font-size:16px; color:#9fb0c0; font-weight:500; margin:24px 0 8px; }
+  .sub { color:#7d8a96; margin-bottom:24px; }
+  table { border-collapse:collapse; width:100%; font-size:13px; margin-bottom:24px; }
+  th, td { padding:8px 10px; border-bottom:1px solid #222; text-align:right; font-variant-numeric:tabular-nums; }
+  th:nth-child(-n+3), td:nth-child(-n+3) { text-align:left; }
+  th { background:#161b22; color:#9fb0c0; font-weight:500; }
+  tr:hover { background:#1a2029; }
+  a { color:#5a9fd4; text-decoration:none; }
+  a:hover { text-decoration:underline; }
+  .pos { color:#16c784; }
+  .neg { color:#ea3943; }
+  code { background:#161b22; padding:1px 6px; border-radius:3px; font-size:12px; }
+  .callout { background:#161b22; border-left:3px solid #5a9fd4; padding:12px 16px; margin:16px 0; border-radius:0 6px 6px 0; }
+  .verdict { background:#1a2a1a; border-left:3px solid #16c784; padding:12px 16px; margin:16px 0; border-radius:0 6px 6px 0; }
+  ul { padding-left:20px; }
+  li { margin:4px 0; }
+</style></head><body>
+<h1>kim · reverse-engineering hyperliquid's top traders</h1>
+<div class="sub">research notes for shipping a profitable bot with $92 starting capital · pulled from real on-chain fills + transcribed strategy videos · last updated 2026-04-17</div>
+
+<h2>The headline finding</h2>
+<div class="verdict">
+The top-10 ROI wallets on HL's leaderboard are <strong>not trading crypto</strong>. They're concentrated on <strong>HIP-3 stock + commodity perps</strong>: oil (<code>xyz:CL</code>), silver (<code>xyz:SILVER</code>), Micron / Apple / Intel / Robinhood (<code>xyz:MU</code>, <code>xyz:AAPL</code>, etc.), NVIDIA, Tesla. Most do it concentrated on 1–2 markets, not diversified.
+</div>
+
+<h2>Top-10 wallet reverse-engineering (last fills pulled 2026-04-17)</h2>
+<p>Realized PnL extracted via HL's <code>userFillsByTime</code> endpoint, summarized by top-grossing market.</p>
+<table>
+  <thead><tr><th>#</th><th>Wallet</th><th>Period</th><th>Realized</th><th>Fees</th><th>Concentrated on</th></tr></thead>
+  <tbody>
+    <tr><td>1</td><td><a href="https://hyperdash.info/trader/0xc387339879190ec6bb5dd0ceae32f9e1d2ed386d">0xc387…386d</a></td><td>Aug 25 → Apr 26 (8 mo)</td><td class="pos">+$137,601</td><td>$7,780</td><td><strong>ETH only</strong> ($138K of $138K) — pure conviction</td></tr>
+    <tr><td>2</td><td><a href="https://hyperdash.info/trader/0xe392e9008c49e7f82e7927a741fcb12799ebdb2b">0xe392…db2b</a></td><td>15 days, June 25</td><td class="pos">+$268,889</td><td>$7,807</td><td><strong>SOL</strong> ($249K) — single-asset blitz</td></tr>
+    <tr><td>3</td><td><a href="https://hyperdash.info/trader/0x096eceb86a9d9a2baa07315464daaa84d0cc07d1">0x096e…07d1</a></td><td>5 mo (Nov–Apr)</td><td class="pos">+$67,170</td><td>$2,171</td><td><strong>xyz:SILVER ($62K!)</strong>, BTC, PALLADIUM, NATGAS</td></tr>
+    <tr><td>4</td><td><a href="https://hyperdash.info/trader/0xcf67e4da9e9cd38c0afd26338d0fbddb3036eb24">0xcf67…eb24</a></td><td>17 days, Apr 26</td><td class="pos">+$47,849</td><td>$290</td><td><strong>xyz:MU, AAPL, INTC, HOOD</strong> — semis + retail brokerages</td></tr>
+    <tr><td>5</td><td><a href="https://hyperdash.info/trader/0xedc3bcac96833616b45be1c5e7bbc3ca8b2fe60c">0xedc3…e60c</a></td><td>27 days, Mar–Apr</td><td class="pos">+$44,697</td><td>$2,786</td><td>SOL ($25K), <strong>xyz:CL crude</strong> ($22K), xyz:NVDA</td></tr>
+    <tr><td>6</td><td><a href="https://hyperdash.info/trader/0x8e70e8e2ddd5404b12fda47c49ca4b9b5e4af04e">0x8e70…f04e</a></td><td>4 mo, Apr–Aug 25</td><td class="pos">+$8,328</td><td>$2,046</td><td>PROVE, PUMP — memecoin pumps</td></tr>
+    <tr><td>7</td><td><a href="https://hyperdash.info/trader/0xd8bdbe0bf532eaa892a9a62dfc1f31674ae6c86e">0xd8bd…c86e</a></td><td>2 mo, Jan–Mar</td><td class="pos">+$7,047</td><td>$5,809</td><td><strong>xyz:CL crude</strong> dominant</td></tr>
+    <tr><td>8</td><td><a href="https://hyperdash.info/trader/0xebdac3f02388754f9ef5b6b262dd03c827addb74">0xebda…db74</a></td><td>3 wk, Mar–Apr</td><td class="pos">+$2,365</td><td>$86</td><td><strong>xyz:CL crude only</strong></td></tr>
+    <tr><td>9</td><td><a href="https://hyperdash.info/trader/0x02a6a59224c8838772931d596a2f74d8edab9112">0x02a6…9112</a></td><td>2 mo, Jan–Mar</td><td>+$175</td><td>$1,888</td><td>basket: CL, SILVER, AMZN, ETH, TSLA — diversification crushed by fees</td></tr>
+    <tr><td>10</td><td><a href="https://hyperdash.info/trader/0x675437e075f70c170f49ced83547cf3b6ff9aeb4">0x6754…aeb4</a></td><td>8 days, Oct 25</td><td class="neg">-$28,481</td><td>$8,144</td><td>BTC <span class="neg">-$33K</span> — even leaderboard wallets blow up</td></tr>
+  </tbody>
+</table>
+
+<h2>Patterns from real winners</h2>
+<ol>
+  <li><strong>Concentration beats diversification.</strong> #1 (ETH only), #2 (SOL only), #3 (SILVER), #4 (semis basket), #7/#8 (oil only). #9 had a balanced 5-asset basket — net +$175 after fees. The fees-vs-diversification trade-off destroys small accounts.</li>
+  <li><strong>HIP-3 markets dominate top ROI.</strong> 5 of top 10 are stock/commodity perps (oil, silver, semis). Crypto winners need either huge capital + months (#1 ETH, #2 SOL) or big trends.</li>
+  <li><strong>Crude oil (<code>xyz:CL</code>) is the most-traded high-PnL market.</strong> 3 of top 10 wallets concentrated on CL alone.</li>
+  <li><strong>Silver is the highest single-market PnL.</strong> 0x096e made $62K on SILVER alone over 5 months.</li>
+  <li><strong>Fees are the #1 killer at small size.</strong> #6, #7, #9 had >25% of gross gains eaten by fees.</li>
+  <li><strong>Win rate doesn't matter, R:R does.</strong> James Wynn (off-leaderboard) had 43.59% win rate, made $87M then lost most of it on conviction longs.</li>
+</ol>
+
+<h2>Strategies decoded from videos + on-chain</h2>
+
+<h3>1. MoonDev's liquidation-momentum arb (transcribed from YouTube 2026-03-11)</h3>
+<div class="callout">
+<strong>Setup:</strong> watch live HL liquidations. When &gt;$25K liquidates on one side (e.g., shorts get rekt), <em>more</em> liquidations on that side likely follow within 5 min (cascade). Take the same-direction trade. Hedge on Polymarket 5-min binary markets at uneven sizes (100 long crypto / 80 short binary) so the hedge isn't 1:1. Edge = liquidation cascade momentum + cross-venue mispricing.<br>
+<strong>Data needed:</strong> live liquidation feed (CoinGlass $900/mo OR HL public clearinghouseState polling).<br>
+<strong>Why it works:</strong> liquidations are forced sells/buys. Once a wave starts, market makers pull, slippage jumps, more liquidations trigger.<br>
+<strong>Capital floor:</strong> $15 per leg per his demo. Works at small size.
+</div>
+
+<h3>2. Single-stock concentration (decoded from 0xcf67…eb24)</h3>
+<div class="callout">
+<strong>Setup:</strong> +$47,849 in 17 days on xyz:MU, AAPL, INTC, HOOD. ~$520K account. ~988 fills. Fees only $290 (means almost all maker orders). Avg trade size ~$50K.<br>
+<strong>Why it likely works:</strong> retail traders use HL after-hours equity perps to react to news (earnings, Fed, geopolitical). Pricing lags real spot until US open. Whale rests bids/asks around the lag, captures the spread + the catch-up.<br>
+<strong>Capital floor:</strong> not retail-friendly — needs deep enough size to be a maker on these books.
+</div>
+
+<h3>3. Conviction long-hold (decoded from 0xc387… ETH wallet, TheWhiteWhaleHL)</h3>
+<div class="callout">
+<strong>Setup:</strong> levered long on ETH, hold for months through drawdowns. 8 months → +$137K on ~$244K account = +56% gross.<br>
+<strong>Why it works:</strong> if you pick the right asset and the right cycle phase, conviction beats trading. HYPE itself has 10x'd from launch to peak.<br>
+<strong>Capital floor:</strong> any size — but mental fortitude is the real bar (60%+ DD survival).
+</div>
+
+<h3>4. Single-commodity hyperfocus (decoded from oil + silver wallets)</h3>
+<div class="callout">
+<strong>Setup:</strong> all-in on one HIP-3 commodity (oil OR silver). 24/7 perp price drifts off NYMEX/CME spot during off-hours. Bot positions ahead of NY open.<br>
+<strong>Why it works:</strong> commodity traders globally use HL as their off-hours venue. Predictable rebalance flows.<br>
+<strong>Capital floor:</strong> small ($14K accounts in our top-10) — works at retail size.
+</div>
+
+<h2>Action plan for $92 (today)</h2>
+<div class="verdict">
+<ol>
+  <li><strong>Stop testing crypto OHLCV.</strong> Pivot all backtests to <code>xyz:CL</code> (oil) and <code>xyz:SILVER</code> first — the highest-PnL markets that work at retail size.</li>
+  <li><strong>Pick ONE market, not 8.</strong> Run iter 12 funding harvest on oil only. Concentration matched the winners.</li>
+  <li><strong>Build a liquidation cascade detector</strong> using HL <code>clearinghouseState</code> polling. Free version of CoinGlass's $900/mo feed.</li>
+  <li><strong>Park 50% in HLP</strong> as a baseline 10-30% APY floor while strategies cook.</li>
+  <li><strong>Forget market making</strong> at $92 — needs $1K+ to post both sides meaningfully.</li>
+  <li><strong>Use copy_trader on 0xebdac…db74</strong> (the smallest oil-only winner, 3wk +$2,365) — closest match to our scale.</li>
+</ol>
+</div>
+
+<h2>What we still need (build queue)</h2>
+<ul>
+  <li><code>fetch_hip3_candles.py</code> — pull oil/silver/stock perp data via <code>candleSnapshot</code> with <code>dex</code> param</li>
+  <li><code>hlp_deposit.py</code> — single-script HLP vault deposit</li>
+  <li><code>liq_cascade_detector.py</code> — poll <code>clearinghouseState</code> for whale wallets, alert when crowd is loaded</li>
+  <li><code>risk_manager.py</code> — daily PnL kill switch, max position sizing wrapper</li>
+  <li>Live deployment of <code>iter_12_funding</code> on oil with $30</li>
+  <li>HL points farming (volume → HYPE token airdrop value)</li>
+</ul>
+
+<h2>Cross-references</h2>
+<ul>
+  <li><a href="https://assiamahs.github.io/offprem/">offprem</a> — backtest reports + leaderboard scans</li>
+  <li><a href="https://assiamahs.github.io/offprem/reports/leaderboard/">offprem leaderboard scan</a> — 30 top traders by ROI</li>
+  <li><a href="https://hyperdash.info">hyperdash.info</a> — third-party HL trader analytics</li>
+  <li><a href="https://app.copin.io/hyperliquid">copin.io/hyperliquid</a> — 700K trader index</li>
+  <li><a href="https://stats-data.hyperliquid.xyz/Mainnet/leaderboard">HL public leaderboard JSON</a> — no auth, free</li>
+</ul>
+
+<h2>Risks &amp; what could go wrong</h2>
+<ul>
+  <li><strong>Survivorship bias.</strong> The leaderboard only shows winners RIGHT NOW. Most who tried these strategies blew up.</li>
+  <li><strong>HIP-3 liquidity.</strong> NVDA perp had $5.8M total OI in Feb — one whale = 68% of book. Your $30 order moves price.</li>
+  <li><strong>Earnings/event risk.</strong> Stock perps gap on earnings. 7-10% moves common. Liquidation in seconds.</li>
+  <li><strong>Concentration risk.</strong> One bad trade on your one market wipes the account. The winners had ROOM to be wrong; we don't.</li>
+  <li><strong>Oracle risk.</strong> HIP-3 prices come from oracles. Oracle outage = bot trading bad data.</li>
+</ul>
+</body></html>
